@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title></title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <script
+    type="text/javascript"
+    src="/js/lib/dummy.js"
+    
+  ></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.min.js"></script>
+      <script type="text/javascript" src="https://unpkg.com/vue-gallery-slideshow"></script>
+
+  <style id="compiled-css" type="text/css">
+      body {
+  font-family: sans-serif;
+}
+
+.image {
+  width: 100px;
+  height: 100px;
+  background-size: contain;
+  cursor: pointer;
+  margin: 10px;
+  border-radius: 3px;
+}
+    /* EOS */
+  </style>
+
+  <script id="insert"></script>
+
+
+    <script src="/js/stringify.js?cd931a8e4d51cee6a29a15686859e32a081bf8e7" charset="utf-8"></script>
+    <script>
+      const customConsole = (w) => {
+        const pushToConsole = (payload, type) => {
+          w.parent.postMessage({
+            console: {
+              payload: stringify(payload),
+              type:    type
+            }
+          }, "*")
+        }
+
+        w.onerror = (message, url, line, column) => {
+          // the line needs to correspond with the editor panel
+          // unfortunately this number needs to be altered every time this view is changed
+          line = line - 70
+          if (line < 0){
+            pushToConsole(message, "error")
+          } else {
+            pushToConsole(`[${line}:${column}] ${message}`, "error")
+          }
+        }
+
+        let console = (function(systemConsole){
+          return {
+            log: function(){
+              let args = Array.from(arguments)
+              pushToConsole(args, "log")
+              systemConsole.log.apply(this, args)
+            },
+            info: function(){
+              let args = Array.from(arguments)
+              pushToConsole(args, "info")
+              systemConsole.info.apply(this, args)
+            },
+            warn: function(){
+              let args = Array.from(arguments)
+              pushToConsole(args, "warn")
+              systemConsole.warn.apply(this, args)
+            },
+            error: function(){
+              let args = Array.from(arguments)
+              pushToConsole(args, "error")
+              systemConsole.error.apply(this, args)
+            },
+            system: function(arg){
+              pushToConsole(arg, "system")
+            },
+            clear: function(){
+              systemConsole.clear.apply(this, {})
+            },
+            time: function(){
+              let args = Array.from(arguments)
+              systemConsole.time.apply(this, args)
+            },
+            assert: function(assertion, label){
+              if (!assertion){
+                pushToConsole(label, "log")
+              }
+
+              let args = Array.from(arguments)
+              systemConsole.assert.apply(this, args)
+            }
+          }
+        }(window.console))
+
+        window.console = { ...window.console, ...console }
+
+        console.system("Running fiddle")
+      }
+
+      if (window.parent){
+        customConsole(window)
+      }
+    </script>
+</head>
+<body>
+    <div id="app">
+  <img class="image" v-for="(image, i) in images" :src="image" @click="onClick(i)">
+  <vue-gallery-slideshow :images="images" :index="index" @close="index = null"></vue-gallery-slideshow>
+</div>
+
+    <script type="text/javascript">
+new Vue({
+    el: '#app',
+    components: {
+      VueGallerySlideshow
+    },
+    methods: {
+      onClick(i) {
+        this.index = i;
+      }
+    },
+    data: {
+      images: [
+        'https://placekitten.com/801/800',
+        'https://placekitten.com/802/800',
+        'https://placekitten.com/803/800',
+        'https://placekitten.com/804/800',
+        'https://placekitten.com/805/800',
+        'https://placekitten.com/806/800',
+        'https://placekitten.com/807/800',
+        'https://placekitten.com/808/800',
+        'https://placekitten.com/809/800',
+        'https://placekitten.com/810/800',
+      ],
+      index: 0
+    }
+  })
+  </script>
+</body>
+</html>
